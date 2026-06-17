@@ -1,4 +1,4 @@
-import type { JobType } from "@/types/types";
+import type { ApplicationStatus, JobType } from "@/types/types";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -19,4 +19,11 @@ export const JOB_TYPE_LABELS: Record<JobType, string> = {
   INTERNSHIP: "Internship",
   FULL_TIME: "Full-time",
   PART_TIME: "Part-time",
+};
+
+export const STATUS_LABELS: Record<ApplicationStatus, string> = {
+  APPLIED: "Applied",
+  INTERVIEWING: "Interviewing",
+  REJECTED: "Rejected",
+  OFFER: "Offer",
 };

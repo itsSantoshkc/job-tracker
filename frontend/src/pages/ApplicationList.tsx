@@ -35,7 +35,8 @@ import EditApplication from "./Application/Component/EditApplication";
 import DeleteApplication from "./Application/Component/DeleteApplication";
 import { getApplications } from "@/api/application";
 import { toast } from "sonner";
-import { formatDate, JOB_TYPE_LABELS } from "@/lib/utils";
+import { formatDate, JOB_TYPE_LABELS, STATUS_LABELS } from "@/lib/utils";
+import { Pagination } from "./Application/Component/Pagination";
 
 const ApplicationList = () => {
   const [applications, setApplications] = useState<Application[]>([]);
@@ -92,14 +93,12 @@ const ApplicationList = () => {
       setIsLoading(false);
     }
   }, [currentPage, currentStatus, currentSearch]);
-  console.log(applications);
   useEffect(() => {
     fetchApplications();
   }, [fetchApplications]);
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center bg-gray-50">
-      {/* Header */}
       <div className="w-full max-w-5xl mt-10 flex flex-col gap-4">
         <div className="flex justify-between my-2 items-center">
           <h1 className="text-4xl  font-bold">Application Tracker</h1>
@@ -150,8 +149,8 @@ const ApplicationList = () => {
       </div>
 
       {/* Table */}
-      <div className="w-full max-w-5xl mt-6 flex justify-center">
-        <div className="w-full bg-white rounded-lg shadow-sm border overflow-hidden">
+      <div className="w-full max-w-5xl  mt-6 flex justify-center">
+        <div className="w-full bg-white rounded-lg  shadow-sm border overflow-hidden">
           <Table>
             <TableHeader className="bg-platinum-500">
               <TableRow>
@@ -172,11 +171,14 @@ const ApplicationList = () => {
                   </TableCell>
                   <TableCell>{application.jobTitle}</TableCell>
                   <TableCell>{JOB_TYPE_LABELS[application.jobType]}</TableCell>
-                  <TableCell>{application.status}</TableCell>
+                  <TableCell>{STATUS_LABELS[application.status]}</TableCell>
                   <TableCell>{formatDate(application.appliedDate)}</TableCell>
                   <TableCell className="text-right">
                     <div>
-                      <EditApplication id={application.id} />
+                      <EditApplication
+                        application={application}
+                        setApplications={setApplications}
+                      />
                       <DeleteApplication id={application.id} />
                     </div>
                   </TableCell>
@@ -186,6 +188,11 @@ const ApplicationList = () => {
           </Table>
         </div>
       </div>
+      <Pagination
+        currentPage={meta.page}
+        totalPages={meta.totalPages}
+        onPageChange={(page) => updateParams({ page: String(page) })}
+      />
     </div>
   );
 };
