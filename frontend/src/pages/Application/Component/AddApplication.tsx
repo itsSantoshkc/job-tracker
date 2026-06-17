@@ -15,8 +15,16 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { AddApplicationInput } from "../types";
 import { newApplicationSchema } from "../validation";
+import { createApplication } from "@/api/application";
+import { toast } from "sonner";
+import type { Application } from "@/types/types";
 
-const AddApplication = () => {
+type Props = {
+  setApplications: React.Dispatch<React.SetStateAction<Application[]>>;
+};
+
+const AddApplication = ({ setApplications }: Props) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -33,18 +41,13 @@ const AddApplication = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // 1. Validate the data
     const result = newApplicationSchema.safeParse(formData);
-
     if (!result.success) {
-      // 2. Map Zod errors to your error state
       const formattedErrors = result.error.flatten().fieldErrors;
-
-      // Transform { field: ["error message"] } to { field: "error message" }
       const errorMap: Record<string, string> = {};
       Object.entries(formattedErrors).forEach(([key, value]) => {
         if (value) errorMap[key] = value[0];
@@ -52,15 +55,33 @@ const AddApplication = () => {
 
       setErrors(errorMap);
       setIsSubmitting(false);
-      return; // Stop submission if invalid
+      return;
     }
 
-    // 3. Clear errors and proceed if valid
     setErrors({});
     try {
-      console.log("Submitting validated data:", result.data);
-      // await yourApiCall(result.data);
+      const dataToSubmit = {
+        ...result.data,
+        appliedDate: new Date(result.data.appliedDate).toISOString(),
+      };
+      await createApplication(dataToSubmit);
+      toast.success("New Application has been added successfully");
+      const optimisticEntry = {
+        ...result.data,
+        id: crypto.randomUUID(), // Temporary ID for UI rendering
+      } as Application;
+      setApplications((prev) => [optimisticEntry, ...prev]);
+      setFormData({
+        companyName: "",
+        jobTitle: "",
+        jobType: "FULL_TIME",
+        status: "APPLIED",
+        appliedDate: new Date().toISOString().split("T")[0],
+        notes: "",
+      });
+      setIsOpen(false);
     } catch (err) {
+      toast.error("Unable to add new application");
       console.error("Submission error:", err);
     } finally {
       setIsSubmitting(false);
@@ -68,9 +89,11 @@ const AddApplication = () => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button>Add Application</Button>
+        <Button size={"icon-lg"} className="px-4 font-bold  p-2 w-44">
+          Add Application
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-125">
         <DialogHeader>
