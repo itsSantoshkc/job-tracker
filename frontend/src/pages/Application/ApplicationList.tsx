@@ -10,8 +10,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Skeleton } from "@/components/ui/skeleton";
-
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 
 import type {
@@ -20,9 +18,9 @@ import type {
   ApplicationStatus,
 } from "@/types/types";
 
-import { APPLICATION_STATUS_OPTIONS } from "../types/types";
+import { APPLICATION_STATUS_OPTIONS } from "../../types/types";
 
-import AddApplication from "./Application/Component/AddApplication";
+import AddApplication from "./Component/AddApplication";
 
 import {
   Select,
@@ -33,16 +31,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import EditApplication from "./Application/Component/EditApplication";
-import DeleteApplication from "./Application/Component/DeleteApplication";
+import EditApplication from "./Component/EditApplication";
+import DeleteApplication from "./Component/DeleteApplication";
 
 import { getApplications } from "@/api/application";
 import { toast } from "sonner";
 
-import { formatDate, JOB_TYPE_LABELS, STATUS_LABELS } from "@/lib/utils";
+import {
+  capitalizeFirstLetter,
+  formatDate,
+  JOB_TYPE_LABELS,
+} from "@/lib/utils";
 
-import { Pagination } from "./Application/Component/Pagination";
-import ApplicationLoading from "./Application/Component/ApplicationLoading";
+import { Pagination } from "./Component/Pagination";
+import ApplicationLoading from "./Component/ApplicationLoading";
+import { ApplicationDetails } from "./ApplicationDetails";
+import CustomStatusBadge from "./Component/CustomStatusBadge";
 
 const ApplicationList = () => {
   const [applications, setApplications] = useState<Application[]>([]);
@@ -123,15 +127,17 @@ const ApplicationList = () => {
   const emptyRows = Math.max(0, 10 - applications.length);
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center bg-gray-50">
-      <div className="w-full max-w-5xl mt-10 flex flex-col gap-4">
-        <div className="flex justify-between my-2 items-center">
-          <h1 className="text-4xl font-bold">Application Tracker</h1>
+    <div className="min-h-screen w-full flex flex-col items-center bg-gray-50 px-4 sm:px-6">
+      <div className="w-full max-w-5xl mt-6 sm:mt-10 flex flex-col gap-4">
+        <div className="flex flex-col sm:flex-row sm:justify-between gap-4 sm:gap-0 my-2 sm:items-center">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-balance">
+            Application Tracker
+          </h1>
 
           <AddApplication setApplications={setApplications} />
         </div>
 
-        <div className="flex justify-between">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <Select
             value={currentStatus}
             onValueChange={(value) =>
@@ -140,12 +146,13 @@ const ApplicationList = () => {
               })
             }
           >
-            <SelectTrigger className="w-64">
-              <SelectValue placeholder="Status" />
+            <SelectTrigger className="w-full sm:w-64">
+              <SelectValue placeholder="Default Status" />
             </SelectTrigger>
 
             <SelectContent>
               <SelectGroup>
+                <SelectItem value="">Default Status</SelectItem>
                 {APPLICATION_STATUS_OPTIONS.map((opt) => (
                   <SelectItem key={opt.value} value={opt.value}>
                     {opt.label}
@@ -156,7 +163,7 @@ const ApplicationList = () => {
           </Select>
 
           <form
-            className="flex gap-3 items-center w-full pl-10"
+            className="flex gap-3 items-center w-full sm:flex-1"
             onSubmit={handleSearch}
           >
             <input
@@ -171,7 +178,7 @@ const ApplicationList = () => {
               type="submit"
               variant="secondary"
               size="icon-lg"
-              className="w-28 px-4 py-2"
+              className="shrink-0 w-24 sm:w-28 px-4 py-2"
             >
               Search
             </Button>
@@ -179,9 +186,9 @@ const ApplicationList = () => {
         </div>
       </div>
 
-      <div className="w-full max-w-5xl mt-6 flex justify-center">
-        <div className="w-full bg-white rounded-lg shadow-sm border overflow-hidden">
-          <Table>
+      <div className="w-full max-w-5xl mt-6 mx-auto flex justify-center">
+        <div className="w-full bg-white rounded-lg shadow-sm border overflow-x-auto">
+          <Table className="min-w-160">
             <TableHeader className="bg-platinum-500">
               <TableRow>
                 <TableHead>Company</TableHead>
@@ -203,40 +210,31 @@ const ApplicationList = () => {
                   <TableRow>
                     <TableCell
                       colSpan={6}
-                      className="text-center py-10 text-muted-foreground"
+                      className="text-center text-base sm:text-xl py-10 text-muted-foreground"
                     >
                       No applications found
                     </TableCell>
                   </TableRow>
-
-                  {Array.from({
-                    length: 9,
-                  }).map((_, index) => (
-                    <TableRow key={`empty-${index}`}>
-                      <TableCell className="h-[53px]" />
-                      <TableCell />
-                      <TableCell />
-                      <TableCell />
-                      <TableCell />
-                      <TableCell />
-                    </TableRow>
-                  ))}
                 </>
               ) : (
                 <>
                   {applications.map((application) => (
                     <TableRow key={application.id}>
                       <TableCell className="font-medium">
-                        {application.companyName}
+                        <ApplicationDetails application={application} />
                       </TableCell>
 
-                      <TableCell>{application.jobTitle}</TableCell>
+                      <TableCell>
+                        {capitalizeFirstLetter(application.jobTitle)}
+                      </TableCell>
 
                       <TableCell>
                         {JOB_TYPE_LABELS[application.jobType]}
                       </TableCell>
 
-                      <TableCell>{STATUS_LABELS[application.status]}</TableCell>
+                      <TableCell>
+                        <CustomStatusBadge status={application.status} />
+                      </TableCell>
 
                       <TableCell>
                         {formatDate(application.appliedDate)}
@@ -259,7 +257,7 @@ const ApplicationList = () => {
                     length: emptyRows,
                   }).map((_, index) => (
                     <TableRow key={`empty-${index}`}>
-                      <TableCell className="h-[53px]">&nbsp;</TableCell>
+                      <TableCell className="h-13.25">&nbsp;</TableCell>
                       <TableCell />
                       <TableCell />
                       <TableCell />

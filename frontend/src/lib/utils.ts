@@ -15,6 +15,9 @@ export function formatDate(dateString: string): string {
   });
 }
 
+export const capitalizeFirstLetter = (str: string): string =>
+  str.charAt(0).toUpperCase() + str.slice(1);
+
 export const JOB_TYPE_LABELS: Record<JobType, string> = {
   INTERNSHIP: "Internship",
   FULL_TIME: "Full-time",

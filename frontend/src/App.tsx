@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import ApplicationList from "./pages/ApplicationList";
+import ApplicationList from "./pages/Application/ApplicationList";
 import { Toaster } from "sonner";
 
 function App() {
