@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -199,17 +199,19 @@ const ApplicationList = () => {
                 <>
                   {state.applications.map((app) => (
                     <TableRow key={app.id}>
-                      <TableCell className="font-medium">
+                      <TableCell className="font-medium ">
                         <ApplicationDetails application={app} />
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="group">
                         {capitalizeFirstLetter(app.jobTitle)}
                       </TableCell>
                       <TableCell>{JOB_TYPE_LABELS[app.jobType]}</TableCell>
-                      <TableCell>
+                      <TableCell className="group">
                         <CustomStatusBadge status={app.status} />
                       </TableCell>
-                      <TableCell>{formatDate(app.appliedDate)}</TableCell>
+                      <TableCell className="group">
+                        {formatDate(app.appliedDate)}
+                      </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
                           <EditApplication

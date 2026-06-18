@@ -14,7 +14,6 @@ import type { AddApplicationInput } from "../types";
 import { newApplicationSchema } from "../../../validation/validation";
 import { createApplication } from "@/api/application";
 import { toast } from "sonner";
-import type { Application } from "@/types/types";
 import ApplicationForm from "./ApplicationForm";
 
 type Props = {
