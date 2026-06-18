@@ -14,6 +14,22 @@ A full-stack application for tracking job applications with a NestJS backend, Re
 - [Node.js](https://nodejs.org/) >= 22 (for local development)
 - [pnpm](https://pnpm.io/) (for local development)
 
+## Screenshot
+### Application Dashboard
+![Dashboard](./docs/assets/dashboard.png)
+### Application Details
+![Application Detail](./docs/assets/application-details.png)
+### New Application 
+![Add Application](./docs/assets/add-application.png)
+### Edit Application 
+![Edit Application](./docs/assets/edit-application.png)
+### Delete Application
+![Delete Application](./docs/assets/delete-application.png)
+### Search Application
+![Search Application](./docs/assets/search-application.png)
+### Filter Application
+![Filter Application](./docs/assets/filter-by-status.png)
+
 ## Quick Start with Docker
 
 ```bash
