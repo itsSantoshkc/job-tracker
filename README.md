@@ -136,6 +136,7 @@ job-application-tracker/
 │   │   └── validation/       # Form validation schemas
 │   ├── Dockerfile
 │   └── vite.config.ts
+└── docker-compose.yml
 ```
 ## Project Overview
 ### Application Dashboard
@@ -153,5 +154,3 @@ job-application-tracker/
 ### Filter Application
 ![Filter Application](./docs/assets/filter-by-status.png)
 
-└── docker-compose.yml
-```
