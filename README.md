@@ -72,8 +72,6 @@ Install dependencies and start:
 
 ```bash
 pnpm install
-pnpm exec prisma generate
-pnpm exec prisma migrate dev
 pnpm run db:seed
 pnpm run start:dev
 ```
