@@ -1,6 +1,19 @@
-import { PrismaClient, JobType, ApplicationStatus } from '@prisma/client';
+import { DataSource } from 'typeorm';
+import { config } from 'dotenv';
+import {
+  Application,
+  JobType,
+  ApplicationStatus,
+} from './application/entities/application.entity';
 
-const prisma = new PrismaClient();
+config();
+
+const dataSource = new DataSource({
+  type: 'postgres',
+  url: process.env.DATABASE_URL,
+  entities: [Application],
+  synchronize: false,
+});
 
 const applications = [
   {
@@ -67,21 +80,22 @@ const applications = [
   },
 ];
 
-async function main() {
-  console.log('Seeding database...');
+async function seed() {
+  await dataSource.initialize();
+  console.log('Database connected.');
+
+  const repo = dataSource.getRepository(Application);
 
   for (const app of applications) {
-    await prisma.application.create({ data: app });
+    const entity = repo.create(app);
+    await repo.save(entity);
   }
 
   console.log(`Created ${applications.length} applications.`);
+  await dataSource.destroy();
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+seed().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

@@ -1,20 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ApplicationController } from './application.controller';
 import { ApplicationService } from './application.service';
-import { PrismaService } from '../prisma/prisma.service';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Application } from './entities/application.entity';
 
 describe('ApplicationController', () => {
   let controller: ApplicationController;
 
-  const mockPrismaService = {
-    application: {
-      create: jest.fn(),
-      findMany: jest.fn(),
-      findUnique: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-      count: jest.fn(),
-    },
+  const mockRepository = {
+    find: jest.fn(),
+    findOneBy: jest.fn(),
+    save: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+    count: jest.fn(),
+    createQueryBuilder: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -22,7 +23,7 @@ describe('ApplicationController', () => {
       controllers: [ApplicationController],
       providers: [
         ApplicationService,
-        { provide: PrismaService, useValue: mockPrismaService },
+        { provide: getRepositoryToken(Application), useValue: mockRepository },
       ],
     }).compile();
 
