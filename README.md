@@ -132,6 +132,10 @@ job-application-tracker/
 │   │   ├── api/              # API client functions
 │   │   ├── components/       # React components
 │   │   ├── pages/            # Page components
+│   │   ├── types/            # TypeScript types
+│   │   └── validation/       # Form validation schemas
+│   ├── Dockerfile
+│   └── vite.config.ts
 ```
 ## Project Overview
 ### Application Dashboard
@@ -148,9 +152,6 @@ job-application-tracker/
 ![Search Application](./docs/assets/search-application.png)
 ### Filter Application
 ![Filter Application](./docs/assets/filter-by-status.png)
-│   │   ├── types/            # TypeScript types
-│   │   └── validation/       # Form validation schemas
-│   ├── Dockerfile
-│   └── vite.config.ts
+
 └── docker-compose.yml
 ```
