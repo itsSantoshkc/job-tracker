@@ -132,7 +132,7 @@ job-application-tracker/
 │   │   ├── api/              # API client functions
 │   │   ├── components/       # React components
 │   │   ├── pages/            # Page components
-
+```
 ## Project Overview
 ### Application Dashboard
 ![Dashboard](./docs/assets/dashboard.png)
