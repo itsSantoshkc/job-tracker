@@ -5,7 +5,7 @@ import type { Application } from "@/types/types";
 import ApplicationForm from "./ApplicationForm";
 import { updateApplication } from "@/api/application";
 import { toast } from "sonner";
-import { newApplicationSchema } from "../validation";
+import { newApplicationSchema } from "../../../validation/validation";
 import {
   Dialog,
   DialogClose,

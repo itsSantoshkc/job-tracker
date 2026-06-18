@@ -1,5 +1,8 @@
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import { FaTrash } from "react-icons/fa";
+import { toast } from "sonner";
+
+import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,31 +15,62 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-type Props = { id: string };
+import { deleteApplication } from "@/api/application";
 
-const DeleteApplication = ({ id }: Props) => {
+type Props = {
+  id: string;
+  companyName: string;
+  onDelete?: (id: string) => void;
+};
+
+const DeleteApplication = ({ id, companyName, onDelete }: Props) => {
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  async function handleDelete() {
+    if (!id || isDeleting) return;
+
+    setIsDeleting(true);
+
+    try {
+      await deleteApplication(id);
+
+      onDelete?.(id);
+
+      toast.success(`${companyName} application deleted`);
+    } catch (error) {
+      toast.error("Failed to delete application");
+    } finally {
+      setIsDeleting(false);
+    }
+  }
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button
-          onClick={() => console.log(id)}
           className="cursor-pointer rounded-md bg-platinum-900 p-2 text-flag-red transition-colors hover:bg-flag-red-900"
           title="Delete"
         >
           <FaTrash />
         </Button>
       </AlertDialogTrigger>
+
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>Delete Application?</AlertDialogTitle>
+
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            application description from our servers.
+            This will permanently delete your application for{" "}
+            <strong>{companyName}</strong>. This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
+
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
+          <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+
+          <AlertDialogAction onClick={handleDelete} disabled={isDeleting}>
+            {isDeleting ? "Deleting..." : "Delete"}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -13,7 +13,6 @@ import {
   capitalizeFirstLetter,
   formatDate,
   JOB_TYPE_LABELS,
-  STATUS_LABELS,
 } from "@/lib/utils";
 import CustomStatusBadge from "./Component/CustomStatusBadge";
 

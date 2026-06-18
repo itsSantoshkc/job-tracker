@@ -11,17 +11,17 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import type { AddApplicationInput } from "../types";
-import { newApplicationSchema } from "../validation";
+import { newApplicationSchema } from "../../../validation/validation";
 import { createApplication } from "@/api/application";
 import { toast } from "sonner";
 import type { Application } from "@/types/types";
 import ApplicationForm from "./ApplicationForm";
 
 type Props = {
-  setApplications: React.Dispatch<React.SetStateAction<Application[]>>;
+  onNewApplication: () => Promise<void>;
 };
 
-const AddApplication = ({ setApplications }: Props) => {
+const AddApplication = ({ onNewApplication }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -64,11 +64,6 @@ const AddApplication = ({ setApplications }: Props) => {
       };
       await createApplication(dataToSubmit);
       toast.success("New Application has been added successfully");
-      const optimisticEntry = {
-        ...result.data,
-        id: crypto.randomUUID(), // Temporary ID for UI rendering
-      } as Application;
-      setApplications((prev) => [optimisticEntry, ...prev]);
       setFormData({
         companyName: "",
         jobTitle: "",
@@ -77,6 +72,7 @@ const AddApplication = ({ setApplications }: Props) => {
         appliedDate: new Date().toISOString().split("T")[0],
         notes: "",
       });
+      onNewApplication();
       setIsOpen(false);
     } catch (err) {
       toast.error("Unable to add new application");
