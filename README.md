@@ -5,7 +5,7 @@ A full-stack application for tracking job applications with a NestJS backend, Re
 ## Tech Stack
 
 - **Frontend:** React, Vite, TypeScript, Tailwind CSS
-- **Backend:** NestJS, Prisma ORM, TypeScript
+- **Backend:** NestJS, TypeORM, TypeScript
 - **Database:** PostgreSQL
 
 ## Prerequisites
@@ -28,8 +28,6 @@ This starts all three services:
 | Backend  | http://localhost:3000        |
 | Swagger  | http://localhost:3000/api    |
 | Database | postgresql://localhost:5432  |
-
-The backend automatically runs Prisma migrations and seeds the database on first startup.
 
 To stop:
 
@@ -68,7 +66,7 @@ PORT=3000
 FRONTEND_URL=http://localhost:5173
 ```
 
-Install dependencies and start:
+Install dependencies, generate the database schema, and start:
 
 ```bash
 pnpm install
@@ -121,13 +119,9 @@ pnpm run dev
 job-application-tracker/
 ├── backend/
 │   ├── src/
-│   │   ├── application/      # Application module (controller, service, DTOs)
-│   │   ├── prisma/           # Prisma module
+│   │   ├── application/      # Application module (controller, service, DTOs, entity)
 │   │   ├── app.module.ts
-│   │   └── main.ts
-│   ├── prisma/
-│   │   ├── schema.prisma     # Database schema
-│   │   ├── migrations/       # Migration files
+│   │   ├── main.ts
 │   │   └── seed.ts           # Seed data
 │   ├── Dockerfile
 │   └── entrypoint.sh
